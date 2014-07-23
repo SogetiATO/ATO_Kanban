@@ -1,0 +1,54 @@
+﻿<div class="row">
+    <a href="#">Sign In</a>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <h4>Unclaimed</h4>
+        <div ng-repeat="todo in unclaimed track by $index" id="todo_{{todo.Status.Type}}_{{todo.ID}}">
+            <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span><a href="" ng-click="claim()">Claim</a>
+        </div>
+        <!-- Button trigger modal -->
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+            Create new task
+        </button>
+
+    </div>
+    <div class="col-md-3">
+        <h4>Claimed</h4>
+        <div ng-repeat="todo in claimed track by $index" id="todo_{{todo.Status.Type}}_{{todo.ID}}">
+            <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span><a href="" ng-click="claim()">Claim</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <h4>Completed</h4>
+        <div ng-repeat="todo in completed track by $index" id="todo_{{todo.Status.Type}}_{{todo.ID}}">
+            <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span><a href="" ng-click="claim()">Claim</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <h4>Approved</h4>
+        <div ng-repeat="todo in approved track by $index" id="todo_{{todo.Status.Type}}_{{todo.ID}}">
+            <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create new task</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveTodo()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

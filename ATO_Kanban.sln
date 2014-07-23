@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATO_Kanban", "ATO_Kanban\ATO_Kanban.csproj", "{FCC50D30-4057-44DD-B310-6800A38F3548}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATO_Kanban.Tests", "ATO_Kanban.Tests\ATO_Kanban.Tests.csproj", "{5B2D6DFB-FEDF-43B9-A077-7A436115A603}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCC50D30-4057-44DD-B310-6800A38F3548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC50D30-4057-44DD-B310-6800A38F3548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC50D30-4057-44DD-B310-6800A38F3548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC50D30-4057-44DD-B310-6800A38F3548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B2D6DFB-FEDF-43B9-A077-7A436115A603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B2D6DFB-FEDF-43B9-A077-7A436115A603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B2D6DFB-FEDF-43B9-A077-7A436115A603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B2D6DFB-FEDF-43B9-A077-7A436115A603}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
