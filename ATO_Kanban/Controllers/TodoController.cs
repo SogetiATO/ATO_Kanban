@@ -62,7 +62,26 @@ namespace ATO_Kanban.Controllers
                 Todo attachedEntity = set.Find(todo.ID);  // You need to have access to key
                 if (attachedEntity != null)
                 {
+                    // Update status
                     attachedEntity.StatusID = todo.Status.ID;
+
+                    // Update reason for revision if one exists
+                    if (!String.IsNullOrEmpty(todo.ReasonForRevision))
+                    {
+                        attachedEntity.ReasonForRevision = todo.ReasonForRevision;
+                    }
+                    
+                    // Update ClaimedByID when claimed
+                    if (todo.ClaimedByID != null)
+                    {
+                        attachedEntity.ClaimedByID = todo.ClaimedByID;
+                    }
+
+                    // Update FinishDate if Status == 4
+                    if (todo.Status.ID == 4)
+                    {
+                        attachedEntity.FinishDate = DateTime.Now;
+                    }
                 }
                 else
                 {
@@ -87,17 +106,23 @@ namespace ATO_Kanban.Controllers
         public HttpResponseMessage PostTodo(Todo todo)
         {
             Todo newTodo = new Todo();
-            newTodo.AssigneeID = 1;
+            newTodo.AssigneeID = todo.AssigneeID;
             newTodo.CreateDate = DateTime.Now;
             newTodo.Description = todo.Description;
-            newTodo.EmailATO = todo.EmailATO;
-            newTodo.IsPublic = todo.IsPublic;
-            newTodo.Optional = todo.Optional;
-            newTodo.PriorityID = todo.PriorityID;
-            newTodo.ReasonForRevision = todo.ReasonForRevision;
-            newTodo.RequiresApproval = todo.RequiresApproval;
-            newTodo.StatusID = 1;
             newTodo.Title = todo.Title;
+            newTodo.StatusID = 1;
+            newTodo.PriorityID = todo.PriorityID;
+            
+            // If userGrade does not equal C, then all the following options will be forced to false;
+            string userGrade = db.Users.Find(todo.AssigneeID).Grade;
+            if (userGrade == "C")
+            {
+                newTodo.EmailATO = todo.EmailATO;
+                newTodo.IsPublic = todo.IsPublic;
+                newTodo.Optional = todo.Optional;
+                newTodo.ReasonForRevision = todo.ReasonForRevision;
+                newTodo.RequiresApproval = todo.RequiresApproval;
+            }
 
             try
             {

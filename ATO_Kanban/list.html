@@ -1,5 +1,4 @@
 ﻿<div class="row ng-hide" ng-hide="correctLogin">
-    <a href="#">Sign In</a>
     <form name="form" class="form-horizontal">
         <div class="control-group" ng-class="{error: form.Username.$invalid}">
 			<label class="control-label" for="Username">Username</label>
@@ -31,7 +30,7 @@
             <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span><a href="" ng-click="claim()">Claim</a>
         </div>
         <!-- Button trigger modal -->
-        <button class="btn btn-primary btn-lg ng-hide" ng-hide="!allowCreate()" data-toggle="modal" data-target="#createTodoModal">
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#createTodoModal">
             Create new task
         </button>
 
@@ -39,15 +38,15 @@
     <div class="col-md-3">
         <h4>Claimed</h4>
         <div ng-repeat="todo in claimed track by $index" id="todo_{{todo.Status.Type}}_{{todo.ID}}">
-            <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span><a href="" ng-click="claim()">Complete</a>
+            <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span><a href="" ng-click="claim()" class="ng-show" ng-show="owner()">Complete</a>
         </div>
     </div>
     <div class="col-md-3">
         <h4>Completed</h4>
         <div ng-repeat="todo in completed track by $index" id="todo_{{todo.Status.Type}}_{{todo.ID}}">
             <span class="Priority_{{todo.Priority.Type}}">{{todo.Title}} </span>
-            <a class="ng-hide" ng-hide="approval()" href="" ng-click="claim()">Approve</a>
-            <a class="btn btn-primary ng-hide" ng-hide="approval()" href="#" data-toggle="modal" data-target="#revisionModal">Revise</a>
+            <a class="ng-show" ng-show="approval()" href="" ng-click="claim()">Approve</a>
+            <a class="btn btn-primary ng-show" ng-show="approval()" href="" ng-click="setActiveTodo()" data-toggle="modal" data-target="#revisionModal">Revise</a>
         </div>
     </div>
     <div class="col-md-3">
@@ -71,46 +70,48 @@
                     <div class="control-group" ng-class="{error: form.Title.$invalid}">
 						<label class="control-label" for="Title">Title</label>
 						<div class="controls">
-							<input type="text" ng-model="item.Title" id="Title">
+							<input type="text" ng-model="formItem.Title" id="Title">
 						</div>
 					</div>
                     <div class="control-group" ng-class="{error: form.Description.$invalid}">
 						<label class="control-label" for="Description">Description</label>
 						<div class="controls">
-							<input type="text" ng-model="item.Description" id="Description">
+							<input type="text" ng-model="formItem.Description" id="Description">
 						</div>
 					</div>
                     <div class="control-group" ng-class="{error: form.Priority.$invalid}">
 						<label class="control-label" for="Priority">Priority</label>
 						<div class="controls">
-                            <select ng-model="item.Priority" id="Priority" ng-options="priority.ID as priority.Type for priority in priorities"></select>
+                            <select ng-model="formItem.Priority" id="Priority" ng-options="priority.ID as priority.Type for priority in priorities"></select>
 						</div>
 					</div>
-                    <div class="control-group" ng-class="{error: form.EmailATO.$invalid}">
-						<label class="control-label" for="EmailATO">EmailATO</label>
-						<div class="controls">
-							<input type="checkbox" ng-model="item.EmailATO" id="EmailATO">
-						</div>
-					</div>
-                    <div class="control-group" ng-class="{error: form.IsPublic.$invalid}">
-						<label class="control-label" for="IsPublic">IsPublic</label>
-						<div class="controls">
-							<input type="checkbox" ng-model="item.IsPublic" id="IsPublic">
-						</div>
-					</div>
-                    <div class="control-group" ng-class="{error: form.Optional.$invalid}">
-						<label class="control-label" for="Optional">Optional</label>
-						<div class="controls">
-							<input type="checkbox" ng-model="item.Optional" id="Optional">
-						</div>
-					</div>
-                    <div class="control-group" ng-class="{error: form.RequiresApproval.$invalid}">
-						<label class="control-label" for="RequiresApproval">RequiresApproval</label>
-						<div class="controls">
-							<input type="checkbox" ng-model="item.RequiresApproval" id="RequiresApproval">
-						</div>
-					</div>
-
+                    <div class="ng-hide" ng-hide="loggedInUser.Grade != 'C'">
+                        <div class="control-group" ng-class="{error: form.IsPublic.$invalid}">
+						    <label class="control-label" for="IsPublic">IsPublic</label>
+						    <div class="controls">
+							    <input type="checkbox" ng-init="formItem.IsPublic=true" ng-model="formItem.IsPublic" id="IsPublic">
+						    </div>
+					    </div>
+                        <div class="control-group ng-hide" ng-class="{error: form.EmailATO.$invalid}" ng-hide="!formItem.IsPublic">
+						    <label class="control-label" for="EmailATO">EmailATO</label>
+						    <div class="controls">
+							    <input type="checkbox" ng-init="formItem.EmailATO=true" ng-model="formItem.EmailATO" id="EmailATO">
+						    </div>
+					    </div>
+                        <div class="control-group ng-hide" ng-class="{error: form.RequiresApproval.$invalid}" ng-hide="!formItem.IsPublic">
+						    <label class="control-label" for="RequiresApproval">RequiresApproval</label>
+						    <div class="controls">
+							    <input type="checkbox" ng-init="formItem.RequiresApproval=true" ng-model="formItem.RequiresApproval" id="RequiresApproval">
+						    </div>
+					    </div>
+                        <div class="control-group ng-hide" ng-class="{error: form.Optional.$invalid}" ng-hide="!formItem.IsPublic">
+						    <label class="control-label" for="Optional">Optional</label>
+						    <div class="controls">
+							    <input type="checkbox" ng-model="formItem.Optional" id="Optional">
+						    </div>
+					    </div>
+                    </div>
+                    
                     <div class="form-actions">
 	                    <button ng-click="saveTodo()" data-dismiss="modal" class="btn btn-primary">Create</button>
 	                    <a href="#/" data-dismiss="modal" class="btn">Cancel</a>
@@ -127,21 +128,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="H1">Create new task</h4>
+                <h4 class="modal-title" id="H1">{{ activeTodo.Title }}</h4>
             </div>
             <div class="modal-body">
+                <h7>{{ activeTodo.Description }}</h7>
                 <form name="form" class="form-horizontal">
-                    <div class="control-group" ng-class="{error: form.Title.$invalid}">
-						<label class="control-label" for="Title">Title</label>
-						<div class="controls">
-							<input type="text" ng-model="item.Title" id="Text1">
-						</div>
-					</div>
                     <div class="control-group" ng-class="{error: form.Revision.$invalid}">
-						<label class="control-label" for="Revision">Revision</label>
-						<div class="controls">
-							<input type="text" ng-model="item.Revision" id="Revision">
-						</div>
+						<label class="control-label" for="Revision">Reason for revision:</label>
+					</div>
+                    <div>
+                        <textarea rows="5" cols="80" ng-model="activeTodo.Revision" id="Revision"></textarea>
 					</div>
 
                     <div class="form-actions">

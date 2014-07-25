@@ -85,15 +85,16 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
 
         $scope.item = Api.Todo.get({ id: todoID }, function (data) {
             $scope.item.Status = newStatus;
+            if (newStatus.ID == 2) {
+                $scope.item.ClaimedByID = $cookies.userID;
+            }
             $scope.updateTodo(oldStatus, $scope.item);
         });
     }
 
-    // TODO
     // Need to create functionality for approval or revision
     $scope.updateTodo = function (oldStatus, todo) {
         var todoID = todo.ID;
-        $scope.item = Api.Todo.get({ id: todoID });
 
         Api.Todo.update({ id: todoID }, todo, function () {
             $("#todo_" + oldStatus.Type + "_" + todo.ID).fadeOut();
@@ -113,23 +114,43 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
         });
     };
 
+    // When the 'Revise' button is clicked it sets a scope variable so that it can pull the title/description for the modal
+    $scope.setActiveTodo = function () {
+        $scope.activeTodo = this.todo;
+    }
+
     // Visibility for assignee of the todo to click approve
-    // Still needs some functionality
     $scope.approval = function () {
         if (this.todo.AssigneeID == $scope.loggedInUser.ID) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     };
 
+    $scope.owner = function () {
+        if (this.todo.ClaimedByID == $scope.loggedInUser.ID) {
+            return true;
+        }
+        return false;
+    }
 
     // TODO
     $scope.revise = function () {
-        // Pop up a modal with the info
-        // Grab reasoning from text box
-        // Pass to backend
-        // Make sure backend changes to the correct stats
-        // Have AngularJS remove item from completed and move back to claimed
+        var todoID = $scope.activeTodo.ID;
+        var oldStatus = $scope.activeTodo.Status;
+        var newStatus = $scope.activeTodo.Status;
+
+        if ($scope.activeTodo.Status.ID != 4) {
+            Api.Status.get({ id: $scope.activeTodo.Status.ID - 1 }, function (data) {
+                newStatus = data;
+            });
+        };
+
+        $scope.item = Api.Todo.get({ id: todoID }, function (data) {
+            $scope.item.Status = newStatus;
+            $scope.item.ReasonForRevision = $scope.activeTodo.Revision;
+            $scope.updateTodo(oldStatus, $scope.item);
+        });
     };
 
     // TODO
@@ -144,22 +165,22 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
 
     // Saves a new todo from the modal
     $scope.saveTodo = function () {
-        var item = $scope.item;
+        var item = $scope.formItem;
 
         // Sets the new item with all the data from the modal
-        item.PriorityID = $scope.item.Priority;
+        item.PriorityID = $scope.formItem.Priority;
         item.AssigneeID = $cookies.userID;
         item.StatusID = 1; // Might be smarter to set this in the backend where we can set it to unclaimed;
-        item.EmailATO = $scope.item.EmailATO;
-        item.RequiresApproval = $scope.item.RequiresApproval;
-        item.Optional = $scope.item.Optional;
-        item.IsPublic = $scope.item.IsPublic;
+        item.EmailATO = $scope.formItem.EmailATO;
+        item.RequiresApproval = $scope.formItem.RequiresApproval;
+        item.Optional = $scope.formItem.Optional;
+        item.IsPublic = $scope.formItem.IsPublic;
         
         Api.Todo.save(item, function (data) {
             data.Status = Api.Status.get({ id: data.StatusID });        // I believe these two lines need to be here to pass the correct id to the backend
             data.Priority = Api.Priority.get({ id: data.PriorityID });  //
             $scope.unclaimed = $scope.unclaimed.concat(data);           // Adds the newly created todo to the unclaimed group
-            $scope.item = null;                                         // Resets the modal fields
+            $scope.formItem = null;                                         // Resets the modal fields
         });
     };
 
