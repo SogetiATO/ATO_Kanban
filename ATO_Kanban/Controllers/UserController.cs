@@ -18,7 +18,16 @@ namespace ATO_Kanban.Models
         // GET api/User
         public IEnumerable<User> GetUsers()
         {
-            return db.Users.AsEnumerable();
+            List<User> userList = db.Users.ToList();
+
+            userList.ForEach(u => u.Password = "");
+
+            //foreach (User user in userList)
+            //{
+            //    user.Password = "";
+            //}
+            
+            return userList;
         }
 
         // GET api/User/5
@@ -30,7 +39,27 @@ namespace ATO_Kanban.Models
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
             }
 
+            user.Password = "";
             return user;
+        }
+
+        public User GetUser(string userName, string password)
+        {
+            User user = db.Users.Where(u => u.Username == userName).FirstOrDefault();
+            if (user == null)
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+
+            if (password == user.Password)
+            {
+                user.Password = "";
+                return user;
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.Forbidden));
+            }
         }
 
         // PUT api/User/5

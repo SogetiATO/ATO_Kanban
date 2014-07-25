@@ -160,6 +160,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\PriorityController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\TodoController.cs" />
     <Compile Include="Global.asax.cs">
@@ -172,6 +173,10 @@
     <Compile Include="Migrations\201407222112206_NullableClaimedByID.cs" />
     <Compile Include="Migrations\201407222112206_NullableClaimedByID.Designer.cs">
       <DependentUpon>201407222112206_NullableClaimedByID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407241705364_CreatedUsername.cs" />
+    <Compile Include="Migrations\201407241705364_CreatedUsername.Designer.cs">
+      <DependentUpon>201407241705364_CreatedUsername.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Priority.cs" />
@@ -573,6 +578,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407222112206_NullableClaimedByID.resx">
       <DependentUpon>201407222112206_NullableClaimedByID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407241705364_CreatedUsername.resx">
+      <DependentUpon>201407241705364_CreatedUsername.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

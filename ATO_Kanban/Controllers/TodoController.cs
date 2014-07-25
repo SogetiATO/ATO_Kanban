@@ -86,19 +86,45 @@ namespace ATO_Kanban.Controllers
         // POST api/Todo
         public HttpResponseMessage PostTodo(Todo todo)
         {
-            if (ModelState.IsValid)
-            {
-                db.Todoes.Add(todo);
-                db.SaveChanges();
+            Todo newTodo = new Todo();
+            newTodo.AssigneeID = 1;
+            newTodo.CreateDate = DateTime.Now;
+            newTodo.Description = todo.Description;
+            newTodo.EmailATO = todo.EmailATO;
+            newTodo.IsPublic = todo.IsPublic;
+            newTodo.Optional = todo.Optional;
+            newTodo.PriorityID = todo.PriorityID;
+            newTodo.ReasonForRevision = todo.ReasonForRevision;
+            newTodo.RequiresApproval = todo.RequiresApproval;
+            newTodo.StatusID = 1;
+            newTodo.Title = todo.Title;
 
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, todo);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = todo.ID }));
+            try
+            {
+                db.Todoes.Add(newTodo);
+                db.SaveChanges();
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, newTodo);
+                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = newTodo.ID }));
                 return response;
             }
-            else
+            catch (Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.InnerException.ToString());
             }
+
+            //if (ModelState.IsValid)
+            //{
+            //    db.Todoes.Add(todo);
+            //    db.SaveChanges();
+
+            //    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, todo);
+            //    response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = todo.ID }));
+            //    return response;
+            //}
+            //else
+            //{
+            //    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            //}
         }
 
         // DELETE api/Todo/5

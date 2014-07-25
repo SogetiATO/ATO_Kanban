@@ -71,3 +71,4 @@ C:\Users\elepolt\documents\visual studio 2012\Projects\ATO_Kanban\ATO_Kanban\obj
 C:\Users\elepolt\documents\visual studio 2012\Projects\ATO_Kanban\ATO_Kanban\obj\Debug\ATO_Kanban.Migrations.ForeignKeyIDs.resources
 C:\Users\elepolt\documents\visual studio 2012\Projects\ATO_Kanban\ATO_Kanban\obj\Debug\ATO_Kanban.csproj.GenerateResource.Cache
 C:\Users\elepolt\documents\visual studio 2012\Projects\ATO_Kanban\ATO_Kanban\obj\Debug\ATO_Kanban.Migrations.NullableClaimedByID.resources
+C:\Users\elepolt\documents\visual studio 2012\Projects\ATO_Kanban\ATO_Kanban\obj\Debug\ATO_Kanban.Migrations.CreatedUsername.resources
