@@ -75,7 +75,26 @@ namespace ATO_Kanban.Models
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            db.Entry(user).State = EntityState.Modified;
+            var entry = db.Entry(user);
+
+            if (entry.State == EntityState.Detached)
+            {
+                var set = db.Set<User>();
+                User attachedEntity = set.Find(user.ID);  // You need to have access to key
+                if (attachedEntity != null)
+                {
+                    // Update User info
+                    attachedEntity.Name = user.Name;
+                    attachedEntity.Grade = user.Grade;
+                    attachedEntity.Username = user.Username;
+                }
+                else
+                {
+                    db.Users.Attach(user);
+                    db.Entry(user).State = EntityState.Modified;
+                }
+            }
+
 
             try
             {
@@ -94,11 +113,20 @@ namespace ATO_Kanban.Models
         {
             if (ModelState.IsValid)
             {
-                db.Users.Add(user);
-                db.SaveChanges();
-
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.ID }));
+                User existingUser = db.Users.Where(u => u.Username == user.Username).FirstOrDefault();
+                HttpResponseMessage response  = null;
+                if (existingUser == null)
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                    response = Request.CreateResponse(HttpStatusCode.Created, user);
+                    response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.ID }));
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.Conflict, user);
+                    response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = existingUser.ID }));
+                }
                 return response;
             }
             else

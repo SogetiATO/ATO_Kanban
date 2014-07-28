@@ -59,8 +59,6 @@ namespace ATO_Kanban.Controllers
         // PUT api/Todo/5
         public HttpResponseMessage PutTodo(int id, Todo todo)
         {
-            DataContext dataContext = new DataContext();
-
             if (!ModelState.IsValid)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);

@@ -2,8 +2,7 @@
     config(function ($routeProvider) {
         $routeProvider.
             when('/', { controller: ListCtrl, templateUrl: 'list.html' }).
-            when('/new', { controller: NewCtrl, templateUrl: 'new.html' }).
-            when('/edit/:editID', { controller: EditCtrl, templateUrl: 'new.html' }).
+            when('/users', { controller: ListCtrl, templateUrl: 'users.html' }).
             otherwise({ redirectTo: '/' });
     });
 
@@ -49,7 +48,12 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
         });
     };
 
-
+    $scope.userSearch = function () {
+        Api.User.query({},
+        function (data) {
+            $scope.users = data;
+        });
+    };
     // Initial functions to set up main screen.
     $scope.reset = function () {
         $scope.loggedInUser = "";
@@ -57,6 +61,8 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
 
         // No need to query database if the user isn't logged in.
         if ($cookies.userID > 0) {
+            $scope.users = [];
+            $scope.userSearch();
             $scope.priorities = [];
             $scope.prioritySearch();
             $scope.statuses = [];
@@ -68,6 +74,11 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
             $scope.search("Claimed");
             $scope.search("Completed");
             $scope.search("Approved");
+            $scope.grades = [
+                { Grade: "A" },
+                { Grade: "B" },
+                { Grade: "C" },
+            ];
         }
     };
 
@@ -92,7 +103,7 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
         });
     }
 
-    // Need to create functionality for approval or revision
+    // Function that Claim calls
     $scope.updateTodo = function (oldStatus, todo) {
         var todoID = todo.ID;
 
@@ -134,7 +145,6 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
         return false;
     }
 
-    // TODO
     $scope.revise = function () {
         var todoID = $scope.activeTodo.ID;
         var oldStatus = $scope.activeTodo.Status;
@@ -153,7 +163,8 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
         });
     };
 
-    // TODO
+    // Deltes Todo from DB and removes from the page
+    // Not graphically available
     $scope.deleteTodo = function () {
         // Available from modal only if optional or creator is viewing
         // remove from correct scope
@@ -183,6 +194,29 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
             $scope.formItem = null;                                         // Resets the modal fields
         });
     };
+
+
+    // Saves a new user from the modal
+    $scope.saveUser = function () {
+        var user = $scope.formUser;
+        user.Grade = $scope.formUser.Grade.Grade;
+
+        Api.User.save(user, function (data) {
+            $scope.formUser = null;     // Resets the modal fields
+        });
+    };
+
+    // Update user from modal
+    $scope.updateUser = function () {
+        var user = $scope.activeUser;
+        user.Name = $scope.activeUser.Name;
+        user.Username = $scope.activeUser.Username;
+        user.Grade = $scope.activeUser.Grade.Grade;
+
+        Api.User.update({ id: user.ID }, user, function () {
+            var test = "test";
+        });
+    }
 
     // Uses special version of User to check for username and password. Passes data to $scope.setLoginInfo(data);
     $scope.login = function () {
@@ -228,28 +262,17 @@ var ListCtrl = function ($cookieStore, $scope, $location, Api, $cookies) {
         $cookies.userID = null;
     }
 
+    $scope.updateUserModal = function () {
+        $scope.activeUser = this.user;
+    }
     // Initial setup
     $scope.reset();
 };
 
-var NewCtrl = function ($scope, $location, Todo) {
+var NewCtrl = function ($scope, $location, Api) {
+
     $scope.saveTodo = function () {
         Todo.save($scope.item, function () {
-            $location.path('/');
         });
     };
-    $scope.action = "Create";
-}
-
-var EditCtrl = function ($scope, $location, $routeParams, Todo) {
-    $scope.saveTodo = function () {
-        Todo.update({ id: todoID }, $scope.item, function () {
-            $location.path('/');
-        });
-    };
-
-    $scope.action = "Update";
-    var todoID = $routeParams.editID;
-    $scope.item = Todo.get({ id: todoID });
-
 }
