@@ -9,7 +9,8 @@ namespace ATO_Kanban.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(ATO_Kanban.Models.DataContext context)
@@ -19,6 +20,12 @@ namespace ATO_Kanban.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
             //
+            Models.User user = new Models.User();
+            user.Username = "elepolt";
+            user.Name = "Evan Lepolt";
+            user.Grade = "C";
+            user.Password = "test";
+            context.Users.AddOrUpdate(user);
             //    context.People.AddOrUpdate(
             //      p => p.FullName,
             //      new Person { FullName = "Andrew Peters" },
