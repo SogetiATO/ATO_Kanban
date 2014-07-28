@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using ATO_Kanban.Models;
+using System.Net.Mail;
 
 namespace ATO_Kanban.Controllers
 {
@@ -30,6 +31,22 @@ namespace ATO_Kanban.Controllers
         // GET api/Todo/5
         public Todo GetTodo(int id)
         {
+
+            //MailMessage message = new MailMessage()
+            //{
+            //    From = new MailAddress("SogetiATO@gmail.com"),
+            //    Subject = "The subject",
+            //    Body = @"Simple text body; set IsBodyHtml for HTML"
+            //};
+
+            //message.To.Add(new MailAddress("Evan.Lepolt@gmail.com"));
+            //SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
+            //smtpClient.EnableSsl = true;
+            //smtpClient.Credentials = new System.Net.NetworkCredential("SogetiATO@gmail.com", "password");
+            //smtpClient.Port = 587;
+            //smtpClient.Send(message);
+
+
             Todo todo = db.Todoes.Find(id);
             if (todo == null)
             {
@@ -77,9 +94,13 @@ namespace ATO_Kanban.Controllers
                         attachedEntity.ClaimedByID = todo.ClaimedByID;
                     }
 
-                    // Update FinishDate if Status == 4
-                    if (todo.Status.ID == 4)
+                    if (todo.Status.ID == 2)
                     {
+                        var test = "test";
+                    }
+                    else if (todo.Status.ID == 4)
+                    {
+                        // Update FinishDate if Status == 4
                         attachedEntity.FinishDate = DateTime.Now;
                     }
                 }

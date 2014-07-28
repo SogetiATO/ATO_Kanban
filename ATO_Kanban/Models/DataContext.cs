@@ -13,6 +13,12 @@ namespace ATO_Kanban.Models
         // 
         // System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<ATO_Kanban.Models.TodoContext>());
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(
+                new MigrateDatabaseToLatestVersion<DataContext, Migrations.Configuration>());
+        }
+
         public DataContext() : base("name=DataContext")
         {
         }
