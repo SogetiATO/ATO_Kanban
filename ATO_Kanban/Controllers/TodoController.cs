@@ -31,15 +31,7 @@ namespace ATO_Kanban.Controllers
         // GET api/Todo/5
         public Todo GetTodo(int id)
         {
-
-            //MailMessage message = new MailMessage()
-            //{
-            //    From = new MailAddress("SogetiATO@gmail.com"),
-            //    Subject = "The subject",
-            //    Body = @"Simple text body; set IsBodyHtml for HTML"
-            //};
-
-            //message.To.Add(new MailAddress("Evan.Lepolt@gmail.com"));
+            
             //SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
             //smtpClient.EnableSsl = true;
             //smtpClient.Credentials = new System.Net.NetworkCredential("SogetiATO@gmail.com", "password");
@@ -131,6 +123,20 @@ namespace ATO_Kanban.Controllers
             newTodo.Title = todo.Title;
             newTodo.StatusID = 1;
             newTodo.PriorityID = todo.PriorityID;
+
+            if (todo.EmailATO)
+            {
+                var smtpClient = new SmtpClient();
+                MailMessage message = new MailMessage()
+                {
+                    From = new MailAddress("SogetiATO@gmail.com"),
+                    Subject = newTodo.Title,
+                    Body = newTodo.Description
+                };
+                message.To.Add(new MailAddress("Evan.Lepolt@gmail.com"));
+                smtpClient.Send(message);
+            }
+
             
             // If userGrade does not equal C, then all the following options will be forced to false;
             string userGrade = db.Users.Find(todo.AssigneeID).Grade;
